@@ -7,10 +7,18 @@ def close_window(root, window):
     window.destroy()
     root.deiconify()
 
-def add_input_field(frame):
-    entry = tk.Entry(frame)
+def add_input_field(container, input_fields):
+    entry = tk.Entry(container)
     entry.pack(side='top', fill='x', padx=5, pady=5)
     input_fields.append(entry)
+
+def delete_input_field(input_fields, container):
+    if input_fields:
+        entry_to_remove = input_fields.pop()
+        entry_to_remove.pack_forget()
+        entry_to_remove.destroy()
+        container.pack_forget()
+        container.pack(side='top', fill='x', expand=True, padx=5, pady=5)
 
 def print_inputs(fixed_entries, input_fields):
     # Imprimir els valors dels camps fixos
@@ -42,31 +50,36 @@ def create_screen(root, window_geometry):
         entry.pack(side='right', expand=True, fill='x')
         fixed_entries[label] = entry  # Guardar l'entrada amb l'etiqueta associada
 
-    # Marc per als inputs dinàmics
-    dynamic_frame = tk.Frame(left_frame)
-    dynamic_frame.pack(side='top', fill='x', expand=True, padx=5, pady=5)
-
-    # Botó per afegir inputs dinàmics
-    btn_add = tk.Button(dynamic_frame, text="Add Trigger", command=lambda: add_input_field(dynamic_frame))
-    btn_add.pack(side='top', fill='x', padx=5, pady=5)
+    # Contenidor per als inputs dinàmics i els botons
+    dynamic_container = tk.Frame(left_frame)
+    dynamic_container.pack(side='top', fill='x', expand=True, padx=5, pady=5)
 
     # Llista per emmagatzemar els camps d'entrada dinàmics
-    global input_fields
     input_fields = []
+
+    buttons_frame = tk.Frame(left_frame)
+    buttons_frame.pack(side='top', fill='x', padx=5, pady=5)
+
+    # Botó per afegir inputs dinàmics
+    btn_add = tk.Button(buttons_frame, text="Add Trigger", command=lambda: add_input_field(buttons_frame, input_fields))
+    btn_add.pack(side='top', fill='x', padx=5, pady=5)
+
+    # Botó per eliminar l'últim input dinàmic afegit
+    btn_delete = tk.Button(buttons_frame, text="Delete Trigger", command=lambda: delete_input_field(input_fields, buttons_frame))
+    btn_delete.pack(side='top', fill='x', padx=5, pady=5)
 
     # Botó per tornar enrere
     btn_back = tk.Button(left_frame, text="Back", command=lambda: close_window(root, window))
-    btn_back.pack(side='top', fill='x', padx=5, pady=5)
+    btn_back.pack(side='bottom', fill='x', padx=5, pady=5)
 
     # Botó per imprimir les dades
     btn_start = tk.Button(left_frame, text="Start button", command=lambda: print_inputs(fixed_entries, input_fields))
     btn_start.pack(side='bottom', fill='x', padx=5, pady=20)
 
-     # Carregar la imatge amb Pillow
+    # Carregar la imatge amb Pillow
     path = 'assets/traction_graph.png'  # Actualitza el camí segons la ubicació de les teves imatges
     pil_image = Image.open(path)
     img = ImageTk.PhotoImage(pil_image)
-
     # Crear el marc per a la imatge
     right_frame = tk.Frame(window, borderwidth=2, relief='sunken')
     right_frame.pack(side='right', fill='both', expand=True)
