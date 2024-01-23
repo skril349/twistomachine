@@ -50,7 +50,7 @@ def create_screen(root, window_geometry):
     fixed_entries = {}
 
     # Crear i afegir camps d'entrada fixos
-    labels = ['Pause 1:', 'Distancia:', 'Pause2:', 'distancia return:', 'cicles:']
+    labels = ['Pause 1:', 'Distance 1:', 'Pause2:', 'Distance 2:', 'Cicles:']
     for label in labels:
         row_frame = tk.Frame(left_frame)
         row_frame.pack(side='top', fill='x', padx=5, pady=5)
