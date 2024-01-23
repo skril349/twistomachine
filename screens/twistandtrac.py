@@ -3,6 +3,13 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 
+# def toggle_title_label(n_input, frame):
+#     n_input_list = len(n_input)
+#     if n_input_list >= 1:
+#         title_label = tk.Label(frame, text="Dx                     N                    time", font=('Helvetica', 12, 'bold'))
+#         title_label.pack(side='top', pady=5)
+   
+
 def close_window(root, window):
     window.destroy()
     root.deiconify()
@@ -24,6 +31,9 @@ def add_input_group(container, input_list):
 
     # Afegeix el marc al llistat d'inputs
     input_list.append((frame, inputs))
+
+
+
 
 def delete_input_group(input_list):
     if input_list:
@@ -66,13 +76,15 @@ def create_screen(root, window_geometry):
     # Llista per guardar els grups d'inputs de N
     n_input_list = []
 
+        
+
     # Botons per gestionar els inputs de N
     btn_add_n = tk.Button(left_frame, text="Add btn N", command=lambda: add_input_group(buttonN_frame, n_input_list))
     btn_add_n.pack(anchor="ne",fill='x',  padx=5, pady=5)
-
     btn_delete_n = tk.Button(left_frame, text="Delete Btn N", command=lambda: delete_input_group(n_input_list))
     btn_delete_n.pack(anchor="nw",fill='x',  padx=5, pady=5)
-
+    title_label = tk.Label(left_frame, text="Dx                     N                    time", font=('Helvetica', 12, 'bold'))
+    title_label.pack(side='top', pady=5)
     # Botons de control
     btn_start = tk.Button(middle_frame, text="Start btn", command=lambda: print("Start"))
     btn_start.pack(side='bottom', padx=5, pady=5)
@@ -91,7 +103,8 @@ def create_screen(root, window_geometry):
 
     btn_delete_trigger = tk.Button(middle_frame, text="Delete btn trigger", command=lambda: delete_trigger(trigger_list))
     btn_delete_trigger.pack(side='top',fill='x',  padx=5, pady=5)
-
+    trigger_title = tk.Label(middle_frame, text="Triggers", font=('Helvetica', 12, 'bold'))
+    trigger_title.pack(side='top', pady=5)
     
 
     # Carrega i mostra les imatges
