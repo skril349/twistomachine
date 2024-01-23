@@ -2,6 +2,7 @@
 
 import tkinter as tk
 from PIL import Image, ImageTk
+import json
 
 def close_window(root, window):
     window.destroy()
@@ -21,12 +22,21 @@ def delete_input_field(input_fields, container):
         container.pack(side='top', fill='x', expand=True, padx=5, pady=5)
 
 def print_inputs(fixed_entries, input_fields):
-    # Imprimir els valors dels camps fixos
+    # Crear un diccionario para almacenar los valores de los campos
+    input_data = {}
+
+    # Almacenar los valores de los campos fijos en el diccionario
     for label, entry in fixed_entries.items():
-        print(f"{label}: {entry.get()}")
-    # Imprimir els valors dels camps dinàmics
+        input_data[label] = entry.get()
+
+    # Almacenar los valores de los campos dinámicos en el diccionario
     for i, entry in enumerate(input_fields):
-        print(f"Trigger {i+1}: {entry.get()}")
+        input_data[f"Trigger {i+1}"] = entry.get()
+
+    # Convertir el diccionario en un objeto JSON y retornarlo
+    json_data = json.dumps(input_data, indent=4)  # indent para obtener una salida JSON formateada
+    print("data = ",json_data)
+    return json_data
 
 def create_screen(root, window_geometry):
     window = tk.Toplevel()
