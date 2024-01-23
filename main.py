@@ -10,7 +10,7 @@ def main_window():
     root = tk.Tk()
     root.title("Pantalla Principal")
 
-    window_geometry = "600x400+100+100"
+    window_geometry = "800x600+100+100"
     root.geometry(window_geometry)
 
     # Crea una llista de funcions per a cada botó
