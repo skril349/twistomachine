@@ -2,13 +2,9 @@
 
 import tkinter as tk
 from PIL import Image, ImageTk
+import json
 
-# def toggle_title_label(n_input, frame):
-#     n_input_list = len(n_input)
-#     if n_input_list >= 1:
-#         title_label = tk.Label(frame, text="Dx                     N                    time", font=('Helvetica', 12, 'bold'))
-#         title_label.pack(side='top', pady=5)
-   
+
 
 def close_window(root, window):
     window.destroy()
@@ -33,6 +29,32 @@ def add_input_group(container, input_list):
     input_list.append((frame, inputs))
 
 
+
+def start_button_action(n_input_list, trigger_list):
+    # Recopilar los valores de los inputs de N
+    n_values = []
+    for group in n_input_list:
+        inputs = group[1]
+        n_values.append({
+            'time': inputs['time'].get(),
+            'Dx': inputs['Dx'].get(),
+            'N': inputs['N'].get()
+        })
+
+    # Recopilar los valores de los inputs de Triggers
+    trigger_values = [entry.get() for entry in trigger_list]
+
+    # Crear un diccionario con los valores recopilados
+    data = {
+        'N_inputs': n_values,
+        'Triggers': trigger_values
+    }
+
+    # Convertir el diccionario en una cadena JSON
+    json_data = json.dumps(data, indent=4)
+
+    # Imprimir la cadena JSON en la terminal
+    print(json_data)
 
 
 def delete_input_group(input_list):
@@ -86,9 +108,9 @@ def create_screen(root, window_geometry):
     title_label = tk.Label(left_frame, text="Dx                     N                    time", font=('Helvetica', 12, 'bold'))
     title_label.pack(side='top', pady=5)
     # Botons de control
-    btn_start = tk.Button(middle_frame, text="Start btn", command=lambda: print("Start"))
+    btn_start = tk.Button(middle_frame, text="Start", command=lambda: start_button_action(n_input_list, trigger_list))
     btn_start.pack(side='bottom', padx=5, pady=5)
-
+    
     btn_back = tk.Button(middle_frame, text="Back", command=lambda: close_window(root, window))
     btn_back.pack(side='bottom', padx=5, pady=5)
 
