@@ -1,6 +1,7 @@
-# screen3.py
+# twist.py
 
 import tkinter as tk
+
 def close_window(root, window):
     window.destroy()
     root.deiconify()
@@ -8,9 +9,9 @@ def close_window(root, window):
 def create_screen(root, window_geometry):
     window = tk.Toplevel()
     window.geometry(window_geometry)
-    window.title('Pantalla 3')
+    window.title('Pantalla twist')
 
-    label = tk.Label(window, text="Aquesta és la pantalla 3")
+    label = tk.Label(window, text="Aquesta és la pantalla twist")
     label.pack(pady=20)
     btn_back = tk.Button(window, text="Torna enrere", command=lambda: close_window(root, window))
     btn_back.pack(side="bottom", pady=20)

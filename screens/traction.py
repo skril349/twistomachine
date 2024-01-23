@@ -1,4 +1,4 @@
-# screen1.py
+# traction.py
 
 import tkinter as tk
 
@@ -9,9 +9,9 @@ def close_window(root, window):
 def create_screen(root, window_geometry):
     window = tk.Toplevel()
     window.geometry(window_geometry)
-    window.title('Pantalla 1')
+    window.title('Pantalla traction')
 
-    label = tk.Label(window, text="Aquesta és la pantalla 1")
+    label = tk.Label(window, text="Aquesta és la pantalla traction")
     label.pack(pady=20)
     btn_back = tk.Button(window, text="Torna enrere", command=lambda: close_window(root, window))
     btn_back.pack(side="bottom", pady=20)
