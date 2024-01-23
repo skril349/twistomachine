@@ -15,6 +15,9 @@ def add_input_group(container, input_list):
     frame = tk.Frame(container)
     frame.pack(side='top', fill='x', padx=5, pady=5)
 
+    index_label = tk.Label(frame, text=f'Pos {len(input_list) + 1}:', font=('Helvetica', 12, 'bold'))
+    index_label.pack(side='left', padx=2)
+
     # Crea i afegeix els inputs al marc
     inputs = {
         'time': tk.Entry(frame, width=20),
@@ -105,7 +108,7 @@ def create_screen(root, window_geometry):
     btn_add_n.pack(anchor="ne",fill='x',  padx=5, pady=5)
     btn_delete_n = tk.Button(left_frame, text="Delete Btn N", command=lambda: delete_input_group(n_input_list))
     btn_delete_n.pack(anchor="nw",fill='x',  padx=5, pady=5)
-    title_label = tk.Label(left_frame, text="Dx                     N                    time", font=('Helvetica', 12, 'bold'))
+    title_label = tk.Label(left_frame, text="Pause                     Dx                    N", font=('Helvetica', 12, 'bold'))
     title_label.pack(side='top', pady=5)
     # Botons de control
     btn_start = tk.Button(middle_frame, text="Start", command=lambda: start_button_action(n_input_list, trigger_list))
