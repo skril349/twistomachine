@@ -1,6 +1,7 @@
 # traction.py
 
 import tkinter as tk
+from PIL import Image, ImageTk
 
 def close_window(root, window):
     window.destroy()
@@ -61,10 +62,18 @@ def create_screen(root, window_geometry):
     btn_start = tk.Button(left_frame, text="Start button", command=lambda: print_inputs(fixed_entries, input_fields))
     btn_start.pack(side='bottom', fill='x', padx=5, pady=20)
 
-    # Marc per la imatge
+     # Carregar la imatge amb Pillow
+    path = 'assets/traction_graph.png'  # Actualitza el camí segons la ubicació de les teves imatges
+    pil_image = Image.open(path)
+    img = ImageTk.PhotoImage(pil_image)
+
+    # Crear el marc per a la imatge
     right_frame = tk.Frame(window, borderwidth=2, relief='sunken')
     right_frame.pack(side='right', fill='both', expand=True)
-    label_image = tk.Label(right_frame, text="Image")
+
+    # Crear el Label i establir la imatge
+    label_image = tk.Label(right_frame, image=img)
+    label_image.image = img  # Mantenir una referència!
     label_image.pack(expand=True)
 
     return window
