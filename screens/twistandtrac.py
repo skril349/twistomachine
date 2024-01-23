@@ -43,9 +43,15 @@ def start_button_action(n_input_list, trigger_list):
             'Dx': inputs['Dx'].get(),
             'N': inputs['N'].get()
         })
+    trigger_values = []
+    for group in trigger_list:
+        inputs = group[1]
+        trigger_values.append({
+            'Pos': inputs['Pos'].get(),
+            'Trigger': inputs['Trigger'].get(),
+        })
 
-    # Recopilar los valores de los inputs de Triggers
-    trigger_values = [entry.get() for entry in trigger_list]
+
 
     # Crear un diccionario con los valores recopilados
     data = {
@@ -65,15 +71,31 @@ def delete_input_group(input_list):
         frame, inputs = input_list.pop()
         frame.destroy()  # Elimina el marc i tots els widgets dins d'ell
 
-def add_trigger(container, trigger_list):
-    entry = tk.Entry(container, width=20)
-    entry.pack(side='top', fill='x', padx=5, pady=5)
-    trigger_list.append(entry)
+
+def add_trigger(container,trigger_list):
+    frame = tk.Frame(container)
+    frame.pack(side='top', fill='x', padx=5, pady=5)
+
+    # Crea i afegeix els inputs al marc
+    inputs = {
+        'Pos': tk.Entry(frame, width=20),
+        'Trigger': tk.Entry(frame, width=20),
+    }
+    inputs['Pos'].pack(side='left', padx=2)
+    inputs['Trigger'].pack(side='left', padx=2)
+
+    trigger_list.append((frame, inputs))
+
+
+# def add_trigger(container, trigger_list):
+#     entry = tk.Entry(container, width=20)
+#     entry.pack(side='top', fill='x', padx=5, pady=5)
+#     trigger_list.append(entry)
 
 def delete_trigger(trigger_list):
     if trigger_list:
-        entry = trigger_list.pop()
-        entry.destroy()
+        frame, entry = trigger_list.pop()
+        frame.destroy()
 
 def create_screen(root, window_geometry):
     window = tk.Toplevel()
@@ -128,7 +150,7 @@ def create_screen(root, window_geometry):
 
     btn_delete_trigger = tk.Button(middle_frame, text="Delete btn trigger", command=lambda: delete_trigger(trigger_list))
     btn_delete_trigger.pack(side='top',fill='x',  padx=5, pady=5)
-    trigger_title = tk.Label(middle_frame, text="Triggers", font=('Helvetica', 12, 'bold'))
+    trigger_title = tk.Label(middle_frame, text="Number Pos         Trigger", font=('Helvetica', 12, 'bold'))
     trigger_title.pack(side='top', pady=5)
     
 
