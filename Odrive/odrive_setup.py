@@ -73,3 +73,35 @@ def execute_movement_sequences(Dx, time_delays, N, Trigger):
             trigger_time = abs(float(Trigger[i]))  # Usar el valor absolut per a temps de espera
             time.sleep(trigger_time)
             print("Trigger tirat")
+
+
+def execute_rotation_positions(data):
+    my_drive = odrive.find_any()
+    time_pause = float(data["Time pause:"])
+    cycles = int(data["Cicles:"])
+    trigger_duration = float(data["Trigger"])
+
+    # Obtenir totes les claus de posicions
+    position_keys = [key for key in data if key.startswith("Position")]
+
+    for cycle in range(cycles):
+        print(f"Iniciant el cicle {cycle + 1}/{cycles}")
+
+        for key in position_keys:
+            position = float(data[key])
+            print(f"Enviant l'eix a la posició {position}")
+            # Enviar la comanda al dispositiu
+            my_drive.axis0.controller.input_pos = position
+
+            # Esperar la meitat del temps de pausa
+            time.sleep(time_pause / 2)
+
+            # Executar el trigger aquí si és necessari
+            print("Executant el trigger")
+            # Suposem que executar el trigger és una funció que pots cridar
+            # execute_trigger(trigger_duration)
+
+            # Esperar la meitat restant del temps de pausa
+            time.sleep(time_pause / 2)
+
+        print(f"Cicle {cycle + 1}/{cycles} completat")
