@@ -4,7 +4,12 @@ import tkinter as tk
 from PIL import Image, ImageTk
 import json
 
-
+import sys
+sys.path.append('../')  # Canvia aquesta ruta amb la ubicació real
+from Functions.structuring_json import processar_json as processar_json
+import Odrive.odrive_setup
+from Odrive.odrive_setup import setup_odrive as setup_odrive
+from Odrive.odrive_setup import execute_movement_sequences as execute_movement_sequences
 
 def close_window(root, window):
     window.destroy()
@@ -51,7 +56,7 @@ def start_button_action(n_input_list, trigger_list):
             'Trigger': inputs['Trigger'].get(),
         })
 
-
+    
 
     # Crear un diccionario con los valores recopilados
     data = {
@@ -59,12 +64,14 @@ def start_button_action(n_input_list, trigger_list):
         'Triggers': trigger_values
     }
 
-    # Convertir el diccionario en una cadena JSON
-    json_data = json.dumps(data, indent=4)
-
     # Imprimir la cadena JSON en la terminal
-    print(json_data)
+    Dx, time, N, Trigger = processar_json(data)
+    print("Dx:", Dx)
+    print("time:", time)
+    print("N:", N)
+    print("Trigger:", Trigger)
 
+    execute_movement_sequences(Dx, time, N, Trigger)
 
 def delete_input_group(input_list):
     if input_list:
@@ -86,11 +93,6 @@ def add_trigger(container,trigger_list):
 
     trigger_list.append((frame, inputs))
 
-
-# def add_trigger(container, trigger_list):
-#     entry = tk.Entry(container, width=20)
-#     entry.pack(side='top', fill='x', padx=5, pady=5)
-#     trigger_list.append(entry)
 
 def delete_trigger(trigger_list):
     if trigger_list:
