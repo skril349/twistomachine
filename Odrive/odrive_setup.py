@@ -1,6 +1,7 @@
 import odrive
 from odrive.enums import *
 import time
+import threading
 
 
 def setup_odrive():
@@ -105,3 +106,39 @@ def execute_rotation_positions(data):
             time.sleep(time_pause / 2)
 
         print(f"Cicle {cycle + 1}/{cycles} completat")
+
+
+def execute_trigger(trigger_time, trigger_name):
+    time.sleep(trigger_time)
+    print(f"Trigger {trigger_name} fired at {trigger_time} seconds")
+
+
+
+def execute_traction_movement(data):
+    my_drive = odrive.find_any()
+
+    cycles = int(data["Cicles:"])
+
+    # Obtenir les pauses i distàncies
+    pauses = [int(data[key]) for key in data if key.startswith("Pause")]
+    distances = [float(data[key]) for key in data if key.startswith("Distance")]
+
+    # Obtenir els triggers i ordenar-los pel temps de trigger
+    triggers = {int(data[key]): key for key in data if key.startswith("Trigger")}
+    trigger_times = sorted(triggers.keys())
+
+    # Iniciar els triggers com a fils d'execució independents
+    for trigger_time in trigger_times:
+        trigger_name = triggers[trigger_time]
+        threading.Thread(target=execute_trigger, args=(trigger_time, trigger_name)).start()
+
+    # Executar els cicles de moviment
+    for cycle in range(cycles):
+        print(f"Starting cycle {cycle + 1}")
+        for pause, distance in zip(pauses, distances):
+            print(f"Pausing for {pause} seconds")
+            time.sleep(pause)  # Pause before moving
+            print(f"Moving to distance {distance}")
+            my_drive.axis1.controller.input_pos = distance  # Move to the specified distance
+
+        print(f"Cycle {cycle + 1} completed")
