@@ -3,10 +3,15 @@ from PIL import Image, ImageTk
 from screens.traction import create_screen as create_screen1
 from screens.twist import create_screen as create_screen2
 from screens.twistandtrac import create_screen as create_screen3
+from Odrive.odrive_setup import setup_odrive as setup_odrive
+
 
 def toggle_fullscreen(root):
     state = root.attributes('-fullscreen')
     root.attributes('-fullscreen', not state)
+
+
+setup_odrive()
 
 def main_window():
     root = tk.Tk()
