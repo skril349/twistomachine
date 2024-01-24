@@ -3,6 +3,11 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 import json
+import sys
+sys.path.append('../')  # Canvia aquesta ruta amb la ubicació real
+import Odrive.odrive_setup
+from Odrive.odrive_setup import setup_odrive as setup_odrive
+from Odrive.odrive_setup import execute_rotation_positions as execute_rotation_positions
 
 def close_window(root, window):
     window.destroy()
@@ -37,10 +42,9 @@ def print_inputs(fixed_entries, input_fields):
     for i, entry in enumerate(input_fields):
         input_data[f"Position {i+1}"] = entry.get()
 
-    # Convertir el diccionario en un objeto JSON y retornarlo
-    json_data = json.dumps(input_data, indent=4)  # indent para obtener una salida JSON formateada
-    print("data = ", json_data)
-    return json_data
+    print("data = ", input_data)
+    execute_rotation_positions(input_data)
+    return input_data
 
 
 def create_screen(root, window_geometry):
