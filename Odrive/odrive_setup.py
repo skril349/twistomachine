@@ -69,7 +69,7 @@ def execute_movement_sequences(Dx, time_delays, N, Trigger):
             time.sleep(0.1)  # Esperar un curta estona abans de comprovar de nou
 
         # Comprovar el valor de Trigger
-        if Trigger[i] != '-1':
+        if Trigger[i] != -1:
             trigger_time = abs(float(Trigger[i]))  # Usar el valor absolut per a temps de espera
             time.sleep(trigger_time)
             print("Trigger tirat")
