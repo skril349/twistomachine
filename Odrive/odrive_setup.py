@@ -152,4 +152,4 @@ def get_motor_data():
     intensity = my_drive.axis1.motor.current_control.Iq_measured
     voltage = my_drive.vbus_voltage
     torque = ((8.27*my_drive.axis1.motor.current_control.Iq_setpoint/150) * 100)
-    return position, position2, intensity, voltage, torque
+    return position, position2,voltage, intensity, torque
