@@ -3,12 +3,14 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import time
 import sys
 
 sys.path.append('../')  # Asegúrate de actualizar esta ruta
 from Odrive.odrive_setup import get_motor_data as get_motor_data
 
-def update_plot(root, position_label, position2_label, intensity_label, voltage_label, torque_label, positions, currents, intensities, voltages, torques, position_ax, current_ax, intensity_ax, voltage_ax, torque_ax, position_canvas, current_canvas, intensity_canvas, voltage_canvas, torque_canvas):
+def update_plot(root, position_label, position2_label, intensity_label, voltage_label, torque_label, positions, currents, intensities, voltages, torques, position_ax, current_ax, intensity_ax, voltage_ax, torque_ax, position_canvas, current_canvas, intensity_canvas, voltage_canvas, torque_canvas,timestamps):
+    current_time = time.time()
     position, position2, intensity, voltage, torque = get_motor_data()
 
     position_label.config(text=f"Position: {position:.2f} degrees")
@@ -22,6 +24,7 @@ def update_plot(root, position_label, position2_label, intensity_label, voltage_
     intensities.append(intensity)
     voltages.append(voltage)
     torques.append(torque)
+    timestamps.append(current_time)
 
     position_ax.clear()
     current_ax.clear()
@@ -47,10 +50,11 @@ def update_plot(root, position_label, position2_label, intensity_label, voltage_
     voltage_canvas.draw()
     torque_canvas.draw()
 
-    root.after(500, update_plot, root, position_label, position2_label, intensity_label, voltage_label, torque_label, positions, currents, intensities, voltages, torques, position_ax, current_ax, intensity_ax, voltage_ax, torque_ax, position_canvas, current_canvas, intensity_canvas, voltage_canvas, torque_canvas)
+    root.after(500, update_plot, root, position_label, position2_label, intensity_label, voltage_label, torque_label, positions, currents, intensities, voltages, torques, position_ax, current_ax, intensity_ax, voltage_ax, torque_ax, position_canvas, current_canvas, intensity_canvas, voltage_canvas, torque_canvas,timestamps)
 
-def download_data(positions, currents, intensities,voltages, torques, filename="data/motor_data.csv"):
+def download_data(timestamps,positions, currents, intensities,voltages, torques, filename="data/motor_data.csv"):
     data = {
+        "Timestamp": timestamps,
         "Position": positions,
         "Motor Current": currents,
         "Intensity": intensities,
@@ -71,6 +75,7 @@ def create_plot_screen(root, window_geometry):
     intensities = []
     voltages = []
     torques = []
+    timestamps = []
 
     left_frame = tk.Frame(window)
     left_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
@@ -111,9 +116,9 @@ def create_plot_screen(root, window_geometry):
     torque_label = tk.Label(window, text="Torque: N/A")
     torque_label.pack()
 
-    download_button = tk.Button(window, text="Descargar Datos", command=lambda: download_data(positions, currents, intensities, voltages, torques))
+    download_button = tk.Button(window, text="Descargar Datos", command=lambda: download_data(timestamps,positions, currents, intensities, voltages, torques))
     download_button.pack()
 
-    update_plot(window, position_label, position2_label, intensity_label, voltage_label, torque_label, positions, currents, intensities, voltages, torques, position_ax, current_ax, intensity_ax, voltage_ax, torque_ax, position_canvas, current_canvas, intensity_canvas, voltage_canvas, torque_canvas)
+    update_plot(window, position_label, position2_label, intensity_label, voltage_label, torque_label,positions, currents, intensities, voltages, torques, position_ax, current_ax, intensity_ax, voltage_ax, torque_ax, position_canvas, current_canvas, intensity_canvas, voltage_canvas, torque_canvas,timestamps)
 
     return window
