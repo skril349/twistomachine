@@ -38,7 +38,7 @@ def setup_odrive():
     return my_drive
 
 
-def execute_movement_sequences(Dx, time_delays, N, Trigger):
+def execute_movement_sequences(Dx, time_delays, N, Trigger = [-1]):
     my_drive = odrive.find_any()
 
     # Funció per comprovar l'estat i la posició del motor

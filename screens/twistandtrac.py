@@ -3,17 +3,20 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 import json
-
+import threading
 import sys
 sys.path.append('../')  # Canvia aquesta ruta amb la ubicació real
 from Functions.structuring_json import processar_json as processar_json
 import Odrive.odrive_setup
 from Odrive.odrive_setup import setup_odrive as setup_odrive
 from Odrive.odrive_setup import execute_movement_sequences as execute_movement_sequences
+from screens.graphics_twistandtrac import create_twistandtrac_plot_screen as create_twistandtrac_plot_screen  # Importa la función desde graphics.py
 
 def close_window(root, window):
     window.destroy()
     root.deiconify()
+
+
 
 def add_input_group(container, input_list):
     # Crea un nou marc per al grup d'inputs
@@ -36,9 +39,14 @@ def add_input_group(container, input_list):
     # Afegeix el marc al llistat d'inputs
     input_list.append((frame, inputs))
 
+def start_motor_and_graphic(fixed_entries, input_fields, root, window_geometry):
+    # Iniciar movimiento del motor en un hilo separado
+    motor_thread = threading.Thread(target=lambda: start_button_action(fixed_entries, input_fields, root, window_geometry))
+    motor_thread.start()
+    # Iniciar la visualización de gráficos
+    create_twistandtrac_plot_screen(root, window_geometry)
 
-
-def start_button_action(n_input_list, trigger_list):
+def start_button_action(n_input_list, trigger_list, root, window_geometry):
     # Recopilar los valores de los inputs de N
     n_values = []
     for group in n_input_list:
@@ -135,7 +143,7 @@ def create_screen(root, window_geometry):
     title_label = tk.Label(left_frame, text="Pause                     Dx                    N", font=('Helvetica', 12, 'bold'))
     title_label.pack(side='top', pady=5)
     # Botons de control
-    btn_start = tk.Button(middle_frame, text="Start", command=lambda: start_button_action(n_input_list, trigger_list))
+    btn_start = tk.Button(middle_frame, text="Start", command=lambda: start_motor_and_graphic(n_input_list, trigger_list, root, window_geometry))
     btn_start.pack(side='bottom', padx=5, pady=5)
     
     btn_back = tk.Button(middle_frame, text="Back", command=lambda: close_window(root, window))
