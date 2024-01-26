@@ -83,7 +83,7 @@ def update_twistandtrac_plot(root, position_label, position2_label, intensity_la
 
 def download_data(timestamps, positions0, positions1, currents0, currents1, 
                   intensities0, intensities1, voltages, torques0, torques1, 
-                  filename="data/motor_twist_data.csv"):
+                  filename="data/motor_twistandtrac_data.csv"):
     
     data = {
         "Timestamp": timestamps,
@@ -99,6 +99,7 @@ def download_data(timestamps, positions0, positions1, currents0, currents1,
     }
 
     df = pd.DataFrame(data)
+    #print(df.head(10))
     df.to_csv(filename, index=False)
     print(f"Datos guardados en {filename}")
 
