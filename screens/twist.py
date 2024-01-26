@@ -3,15 +3,20 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 import json
+import threading
+
 import sys
 sys.path.append('../')  # Canvia aquesta ruta amb la ubicació real
 import Odrive.odrive_setup
 from Odrive.odrive_setup import setup_odrive as setup_odrive
 from Odrive.odrive_setup import execute_rotation_positions as execute_rotation_positions
+from screens.graphics_twist import create_twist_plot_screen as create_twist_plot_screen  # Importa la función desde graphics.py
 
 def close_window(root, window):
     window.destroy()
     root.deiconify()
+
+
 
 def add_input_field(container, input_fields):
     entry = tk.Entry(container)
@@ -26,7 +31,14 @@ def delete_input_field(input_fields, container):
         container.pack_forget()
         container.pack(side='top', fill='x', expand=True, padx=5, pady=5)
 
-def print_inputs(fixed_entries, input_fields):
+def start_motor_and_graphic(fixed_entries, input_fields, root, window_geometry):
+    # Iniciar movimiento del motor en un hilo separado
+    motor_thread = threading.Thread(target=lambda: print_inputs(fixed_entries, input_fields, root, window_geometry))
+    motor_thread.start()
+    # Iniciar la visualización de gráficos
+    create_twist_plot_screen(root, window_geometry)
+
+def print_inputs(fixed_entries, input_fields,root, window_geometry):
     # Crear un diccionario para almacenar los valores de los campos
     input_data = {}
 
@@ -92,7 +104,7 @@ def create_screen(root, window_geometry):
     btn_back.pack(side='bottom', fill='x', padx=5, pady=5)
 
     # Botó per imprimir les dades
-    btn_start = tk.Button(left_frame, text="Start button", command=lambda: print_inputs(fixed_entries, input_fields))
+    btn_start = tk.Button(left_frame, text="Start", command=lambda: start_motor_and_graphic(fixed_entries, input_fields, root, window_geometry))
     btn_start.pack(side='bottom', fill='x', padx=5, pady=20)
 
     # Carregar la imatge amb Pillow
