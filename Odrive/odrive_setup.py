@@ -144,7 +144,7 @@ def execute_traction_movement(data):
         print(f"Cycle {cycle + 1} completed")
 
 
-def get_motor_data():
+def get_motor1_data():
     my_drive = odrive.find_any()
     # Reemplaza esta sección con tu código para obtener datos reales del motor/dispositivo
     position = my_drive.axis1.encoder.pos_estimate
@@ -152,4 +152,14 @@ def get_motor_data():
     intensity = my_drive.axis1.motor.current_control.Iq_measured
     voltage = my_drive.vbus_voltage
     torque = ((8.27*my_drive.axis1.motor.current_control.Iq_setpoint/150) * 100)
+    return position, position2,voltage, intensity, torque
+
+def get_motor0_data():
+    my_drive = odrive.find_any()
+    # Reemplaza esta sección con tu código para obtener datos reales del motor/dispositivo
+    position = my_drive.axis0.encoder.pos_estimate
+    position2 = my_drive.axis0.motor.I_bus
+    intensity = my_drive.axis0.motor.current_control.Iq_measured
+    voltage = my_drive.vbus_voltage
+    torque = ((8.27*my_drive.axis0.motor.current_control.Iq_setpoint/270) * 100)
     return position, position2,voltage, intensity, torque

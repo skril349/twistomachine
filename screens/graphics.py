@@ -7,11 +7,11 @@ import time
 import sys
 
 sys.path.append('../')  # Asegúrate de actualizar esta ruta
-from Odrive.odrive_setup import get_motor_data as get_motor_data
+from Odrive.odrive_setup import get_motor1_data as get_motor1_data
 
 def update_plot(root, position_label, position2_label, intensity_label, voltage_label, torque_label, positions, currents, intensities, voltages, torques, position_ax, current_ax, intensity_ax, voltage_ax, torque_ax, position_canvas, current_canvas, intensity_canvas, voltage_canvas, torque_canvas,timestamps):
     current_time = time.time()
-    position, position2, intensity, voltage, torque = get_motor_data()
+    position, position2, intensity, voltage, torque = get_motor1_data()
 
     position_label.config(text=f"Position: {position:.2f} degrees")
     position2_label.config(text=f"Motor Current: {position2:.2f} A")
