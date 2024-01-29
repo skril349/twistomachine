@@ -164,6 +164,8 @@ def create_screen(root, window_geometry):
 
     cycles_entry = tk.Entry(cycles_frame, width=20)
     cycles_entry.pack(side='left', padx=2)
+    cycles_entry.insert(0, "1")  # Estableix el valor per defecte a 1
+
 
 
     btn_start = tk.Button(middle_frame, text="Start", command=lambda: start_motor_and_graphic(n_input_list, trigger_list, root, window_geometry, cycles_entry))

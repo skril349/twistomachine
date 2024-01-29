@@ -19,5 +19,6 @@ def processar_json(json_input):
             if 0 <= pos < len(trigger_values):
                 trigger_values[pos] = trigger.get("Trigger")
         Trigger_list = trigger_values
-
+    else:
+        Trigger_list = [-1] * len(Dx_list)
     return Dx_list, time_list, N_list, Trigger_list
