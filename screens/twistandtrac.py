@@ -39,12 +39,24 @@ def add_input_group(container, input_list):
     # Afegeix el marc al llistat d'inputs
     input_list.append((frame, inputs))
 
-def start_motor_and_graphic(fixed_entries, input_fields, root, window_geometry):
-    # Iniciar movimiento del motor en un hilo separado
-    motor_thread = threading.Thread(target=lambda: start_button_action(fixed_entries, input_fields, root, window_geometry))
-    motor_thread.start()
-    # Iniciar la visualización de gráficos
+# Aquesta és la nova funció que controla la repetició del moviment del motor
+def repeat_motor_movement(fixed_entries, input_fields, root, window_geometry, num_cycles):
+    for _ in range(num_cycles):
+        motor_thread = threading.Thread(target=lambda: start_button_action(fixed_entries, input_fields, root, window_geometry))
+        motor_thread.start()
+        motor_thread.join()  # Esperar que el cicle actual acabi
+
+# Modifica la funció start_motor_and_graphic per llançar el loop de cicles en un nou fil
+def start_motor_and_graphic(fixed_entries, input_fields, root, window_geometry, cycles_entry):
+    num_cycles = int(cycles_entry.get())
+
+    # Crea i inicia un nou fil per a la repetició del moviment del motor
+    motor_loop_thread = threading.Thread(target=lambda: repeat_motor_movement(fixed_entries, input_fields, root, window_geometry, num_cycles))
+    motor_loop_thread.start()
+
+    # Iniciar la visualización de gráficos en el fil principal
     create_twistandtrac_plot_screen(root, window_geometry)
+
 
 def start_button_action(n_input_list, trigger_list, root, window_geometry):
     # Recopilar los valores de los inputs de N
@@ -143,7 +155,18 @@ def create_screen(root, window_geometry):
     title_label = tk.Label(left_frame, text="Pause                     Dx                    N", font=('Helvetica', 12, 'bold'))
     title_label.pack(side='top', pady=5)
     # Botons de control
-    btn_start = tk.Button(middle_frame, text="Start", command=lambda: start_motor_and_graphic(n_input_list, trigger_list, root, window_geometry))
+
+    cycles_frame = tk.Frame(middle_frame)
+    cycles_frame.pack(side='bottom', fill='x', padx=5, pady=5)
+
+    cycles_label = tk.Label(cycles_frame, text="Cicles:", font=('Helvetica', 12))
+    cycles_label.pack(side='left', padx=2)
+
+    cycles_entry = tk.Entry(cycles_frame, width=20)
+    cycles_entry.pack(side='left', padx=2)
+
+
+    btn_start = tk.Button(middle_frame, text="Start", command=lambda: start_motor_and_graphic(n_input_list, trigger_list, root, window_geometry, cycles_entry))
     btn_start.pack(side='bottom', padx=5, pady=5)
     
     btn_back = tk.Button(middle_frame, text="Back", command=lambda: close_window(root, window))
