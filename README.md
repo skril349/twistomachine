@@ -1,45 +1,55 @@
-**Edit a file, create a new file, and clone from Bitbucket in under 2 minutes**
 
-When you're done, you can delete the content in this README and update the file with details for others getting started with your repository.
 
-*We recommend that you open this README in another tab as you perform the tasks below. You can [watch our video](https://youtu.be/0ocf7u76WSo) for a full demo of all the steps in this tutorial. Open the video in a new tab to avoid leaving Bitbucket.*
+## Funcionalitats
 
----
+El script principal `main.py` realitza les següents tasques:
 
-## Edit a file
+- **TkInter**: Permet realitzar una interfície gràfica per controlar el sistema.
+- **Tracció**: introduïnt paràmetres de pause1, distancia1, pause2, distancia2, cicles i triggers, podem realitzar un cicle complert de tracció.
+- **Rotació**: introduïnt paràmetres de pause, cicles i posicions, podem realitzar un cicle complert de rotació generant triggers a time = pause/2.
+- **Tracció i rotació**: introduïnt valors de pause, Dx, N i Triggersm podem generar un gràfic complert de tracció i rotació.
 
-You’ll start by editing this README file to learn how to edit a file in Bitbucket.
+## Com Utilitzar
 
-1. Click **Source** on the left side.
-2. Click the README.md link from the list of files.
-3. Click the **Edit** button.
-4. Delete the following text: *Delete this line to make a change to the README from Bitbucket.*
-5. After making your change, click **Commit** and then **Commit** again in the dialog. The commit page will open and you’ll see the change you just made.
-6. Go back to the **Source** page.
+Per executar el script `main.py`, podeu utilitzar diferents arguments de línia de comandes per executar tasques específiques:
 
----
+Es pot crear un entorn virtual si es vol ( no necessari):
+```
+virtualenv venv
+```
 
-## Create a file
+Posteriorment instalarem els requeriments necessaris:
+```
+pip install -r requirements.txt
+```
+L'execució del codi es farà de la següent manera:
 
-Next, you’ll add a new file to this repository.
+- **root**: Accedim a la carpeta principal del projecte.
+    ```
+    python main.py
+    ```
 
-1. Click the **New file** button at the top of the **Source** page.
-2. Give the file a filename of **contributors.txt**.
-3. Enter your name in the empty file space.
-4. Click **Commit** and then **Commit** again in the dialog.
-5. Go back to the **Source** page.
+### Tests
+Els tests es poden executar mitjançant el següent comandament:
+```
+cd Tests
+```
 
-Before you move on, go ahead and explore the repository. You've already seen the **Source** page, but check out the **Commits**, **Branches**, and **Settings** pages.
+- **test_json_structure.py**: Genera l'estructura de fitxers que el codi espera.
+```
+python test_json_structure.py
+```
+- **test_traction.py**: Genera una seqüència de tracció.
+```
+python test_traction.py
+```
 
----
+- **test_twisting.py**: Genera una seqüència de torsió.
+```
+python test_twisting.py
+```
 
-## Clone a repository
-
-Use these steps to clone from SourceTree, our client for using the repository command-line free. Cloning allows you to work on your files locally. If you don't yet have SourceTree, [download and install first](https://www.sourcetreeapp.com/). If you prefer to clone from the command line, see [Clone a repository](https://confluence.atlassian.com/x/4whODQ).
-
-1. You’ll see the clone button under the **Source** heading. Click that button.
-2. Now click **Check out in SourceTree**. You may need to create a SourceTree account or log in.
-3. When you see the **Clone New** dialog in SourceTree, update the destination path and name if you’d like to and then click **Clone**.
-4. Open the directory you just created to see your repository’s files.
-
-Now that you're more familiar with your Bitbucket repository, go ahead and add a new file locally. You can [push your change back to Bitbucket with SourceTree](https://confluence.atlassian.com/x/iqyBMg), or you can [add, commit,](https://confluence.atlassian.com/x/8QhODQ) and [push from the command line](https://confluence.atlassian.com/x/NQ0zDQ).
+- **testing_odrive.py**: Genera una seqüència de twisting i traction.
+```
+python testing_odrive.py
+```
