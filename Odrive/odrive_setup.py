@@ -37,6 +37,7 @@ def setup_odrive():
 
     return my_drive
 
+trigger_twistandtrac_list = []
 
 def execute_movement_sequences(Dx, time_delays, N, Trigger = [-1]):
     my_drive = odrive.find_any()
@@ -74,6 +75,8 @@ def execute_movement_sequences(Dx, time_delays, N, Trigger = [-1]):
             trigger_time = abs(float(Trigger[i]))  # Usar el valor absolut per a temps de espera
             time.sleep(trigger_time)
             print("Trigger tirat")
+            global trigger_twistandtrac_list
+            trigger_twistandtrac_list.append(time.time()) 
 
 trigger_twist_list = []
 

@@ -9,7 +9,7 @@ import threading
 import sys
 sys.path.append('../')  # Asegúrate de actualizar esta ruta
 from Odrive.odrive_setup import get_motor0_data as get_motor0_data
-from Odrive.odrive_setup import get_motor1_data as get_motor1_data
+from Odrive.odrive_setup import get_motor1_data, trigger_twistandtrac_list
 
 def update_twistandtrac_plot(root, position_label, position2_label, intensity_label, 
                voltage_label, torque_label, positions0, positions1, currents0, currents1, intensities0, 
@@ -49,15 +49,22 @@ def update_twistandtrac_plot(root, position_label, position2_label, intensity_la
     voltage_ax.clear()
     torque_ax.clear()
 
-    position_ax.plot(positions0, label='Position Motor0 (degrees)')
-    position_ax.plot(positions1, label='Position Motor1 (degrees)')
-    current_ax.plot(currents0, label='Motor Current Motor0 (A)')
-    current_ax.plot(currents1, label='Motor Current Motor1 (A)')
-    intensity_ax.plot(intensities0, label='Intensity Motor0')
-    intensity_ax.plot(intensities1, label='Intensity Motor1')
-    voltage_ax.plot(voltages, label='Voltage (V)')
-    torque_ax.plot(torques0, label='Torque Motor0 (%)')
-    torque_ax.plot(torques1, label='Torque Motor1 (%)')
+    position_ax.plot(timestamps,positions0, label='Position Motor0 (degrees)')
+    position_ax.plot(timestamps,positions1, label='Position Motor1 (degrees)')
+    current_ax.plot(timestamps,currents0, label='Motor Current Motor0 (A)')
+    current_ax.plot(timestamps,currents1, label='Motor Current Motor1 (A)')
+    intensity_ax.plot(timestamps,intensities0, label='Intensity Motor0')
+    intensity_ax.plot(timestamps,intensities1, label='Intensity Motor1')
+    voltage_ax.plot(timestamps,voltages, label='Voltage (V)')
+    torque_ax.plot(timestamps,torques0, label='Torque Motor0 (%)')
+    torque_ax.plot(timestamps,torques1, label='Torque Motor1 (%)')
+
+    trigger_legend_added = False
+
+    for trigger_time in trigger_twistandtrac_list:
+        if min(timestamps) <= trigger_time <= max(timestamps):
+            position_ax.axvline(x=trigger_time, color='r', linestyle='--', label='Trigger' if not trigger_legend_added else "")
+            trigger_legend_added = True  # Marcar que la leyenda del trigger ya se ha añadido
 
     # Afegir llegendes
     position_ax.legend()
@@ -97,9 +104,16 @@ def download_data(timestamps, positions0, positions1, currents0, currents1,
         "Torque Motor0": torques0,
         "Torque Motor1": torques1
     }
-
+    
     df = pd.DataFrame(data)
-    #print(df.head(10))
+
+    # Añadir columna para los triggers
+    df['Trigger'] = False
+    for trigger_time in trigger_twistandtrac_list:
+        # Encontrar el índice más cercano en el DataFrame para el tiempo del trigger
+        closest_time_index = (df['Timestamp'] - trigger_time).abs().idxmin()
+        df.at[closest_time_index, 'Trigger'] = True
+
     df.to_csv(filename, index=False)
     print(f"Datos guardados en {filename}")
 
