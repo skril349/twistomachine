@@ -7,9 +7,9 @@ import time
 import sys
 
 sys.path.append('../')  # Asegúrate de actualizar esta ruta
-from Odrive.odrive_setup import get_motor1_data as get_motor1_data
+from Odrive.odrive_setup import get_motor1_data, trigger_times_list
 
-def update_plot(root, position_label, position2_label, intensity_label, voltage_label, torque_label, positions, currents, intensities, voltages, torques, position_ax, current_ax, intensity_ax, voltage_ax, torque_ax, position_canvas, current_canvas, intensity_canvas, voltage_canvas, torque_canvas,timestamps):
+def update_plot(root, position_label, position2_label, intensity_label, voltage_label, torque_label, positions, currents, intensities, voltages, torques, position_ax, current_ax, intensity_ax, voltage_ax, torque_ax, position_canvas, current_canvas, intensity_canvas, voltage_canvas, torque_canvas, timestamps):
     current_time = time.time()
     position, position2, intensity, voltage, torque = get_motor1_data()
 
@@ -26,33 +26,43 @@ def update_plot(root, position_label, position2_label, intensity_label, voltage_
     torques.append(torque)
     timestamps.append(current_time)
 
+    # Limpiar los ejes antes de dibujar
     position_ax.clear()
     current_ax.clear()
     intensity_ax.clear()
     voltage_ax.clear()
     torque_ax.clear()
 
-    position_ax.plot(positions, label='Position (degrees)')
-    current_ax.plot(currents, label='Motor Current (A)')
-    intensity_ax.plot(intensities, label='Intensity')
-    voltage_ax.plot(voltages, label='Voltage (V)')
-    torque_ax.plot(torques, label='Torque (%)')
+    # Dibujar los datos
+    position_ax.plot(timestamps, positions, label='Position (degrees)')
+    current_ax.plot(timestamps, currents, label='Motor Current (A)')
+    intensity_ax.plot(timestamps, intensities, label='Intensity')
+    voltage_ax.plot(timestamps, voltages, label='Voltage (V)')
+    torque_ax.plot(timestamps, torques, label='Torque (%)')
 
+    # Dibujar líneas verticales para cada trigger
+    for trigger_time in trigger_times_list:
+        if min(timestamps) <= trigger_time <= max(timestamps):
+            position_ax.axvline(x=trigger_time, color='r', linestyle='--', label='Trigger')
+
+    # Añadir leyendas a los gráficos
     position_ax.legend()
     current_ax.legend()
     intensity_ax.legend()
     voltage_ax.legend()
     torque_ax.legend()
 
+    # Actualizar los canvas
     position_canvas.draw()
     current_canvas.draw()
     intensity_canvas.draw()
     voltage_canvas.draw()
     torque_canvas.draw()
 
-    root.after(500, update_plot, root, position_label, position2_label, intensity_label, voltage_label, torque_label, positions, currents, intensities, voltages, torques, position_ax, current_ax, intensity_ax, voltage_ax, torque_ax, position_canvas, current_canvas, intensity_canvas, voltage_canvas, torque_canvas,timestamps)
+    # Programar la próxima actualización
+    root.after(500, update_plot, root, position_label, position2_label, intensity_label, voltage_label, torque_label, positions, currents, intensities, voltages, torques, position_ax, current_ax, intensity_ax, voltage_ax, torque_ax, position_canvas, current_canvas, intensity_canvas, voltage_canvas, torque_canvas, timestamps)
 
-def download_data(timestamps,positions, currents, intensities,voltages, torques, filename="data/motor_data.csv"):
+def download_data(timestamps, positions, currents, intensities, voltages, torques, filename="data/motor_data.csv"):
     data = {
         "Timestamp": timestamps,
         "Position": positions,
@@ -62,6 +72,14 @@ def download_data(timestamps,positions, currents, intensities,voltages, torques,
         "Torque": torques
     }
     df = pd.DataFrame(data)
+
+    # Añadir columna para los triggers
+    df['Trigger'] = False
+    for trigger_time in trigger_times_list:
+        # Encontrar el índice más cercano en el DataFrame para el tiempo del trigger
+        closest_time_index = (df['Timestamp'] - trigger_time).abs().idxmin()
+        df.at[closest_time_index, 'Trigger'] = True
+
     df.to_csv(filename, index=False)
     print(f"Datos guardados en {filename}")
 

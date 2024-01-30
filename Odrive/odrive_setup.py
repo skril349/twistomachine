@@ -108,11 +108,14 @@ def execute_rotation_positions(data):
         print(f"Cicle {cycle + 1}/{cycles} completat")
 
 
+# Lista global para almacenar los tiempos de disparo de los triggers
+trigger_times_list = []
+
 def execute_trigger(trigger_time, trigger_name):
     time.sleep(trigger_time)
+    global trigger_times_list
+    trigger_times_list.append(time.time())  # Añade el tiempo actual a la lista
     print(f"Trigger {trigger_name} fired at {trigger_time} seconds")
-
-
 
 def execute_traction_movement(data):
     my_drive = odrive.find_any()
