@@ -75,6 +75,7 @@ def execute_movement_sequences(Dx, time_delays, N, Trigger = [-1]):
             time.sleep(trigger_time)
             print("Trigger tirat")
 
+trigger_twist_list = []
 
 def execute_rotation_positions(data):
     my_drive = odrive.find_any()
@@ -99,6 +100,8 @@ def execute_rotation_positions(data):
 
             # Executar el trigger aquí si és necessari
             print("Executant el trigger")
+            global trigger_twist_list
+            trigger_twist_list.append(time.time()) 
             # Suposem que executar el trigger és una funció que pots cridar
             # execute_trigger(trigger_duration)
 
