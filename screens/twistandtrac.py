@@ -192,7 +192,7 @@ def create_screen(root, window_geometry):
     # Carrega i mostra les imatges
 
       # Carregar la imatge amb Pillow
-    path1 = 'assets/traction_graph.png'  # Actualitza el camí segons la ubicació de les teves imatges
+    path1 = 'assets/tract_and_twist.png'  # Actualitza el camí segons la ubicació de les teves imatges
     pil_image = Image.open(path1)
     img1 = ImageTk.PhotoImage(pil_image)
     # Crear el marc per a la imatge
@@ -202,19 +202,19 @@ def create_screen(root, window_geometry):
     # Crear el Label i establir la imatge
     label_image = tk.Label(right_frame_image, image=img1)
     label_image.image = img1  # Mantenir una referència!
-    label_image.pack(expand=False)
+    label_image.pack(expand=True)
 
-    path2 = 'assets/twist_graph.png'  # Actualitza el camí segons la ubicació de les teves imatges
-    pil_image = Image.open(path2)
-    img2 = ImageTk.PhotoImage(pil_image)
-    # Crear el marc per a la imatge
-    right_frame_image2 = tk.Frame(right_frame, borderwidth=2, relief='sunken')
-    right_frame_image2.pack(side='bottom')
+    # path2 = 'assets/twist_graph.png'  # Actualitza el camí segons la ubicació de les teves imatges
+    # pil_image = Image.open(path2)
+    # img2 = ImageTk.PhotoImage(pil_image)
+    # # Crear el marc per a la imatge
+    # right_frame_image2 = tk.Frame(right_frame, borderwidth=2, relief='sunken')
+    # right_frame_image2.pack(side='bottom')
 
-    # Crear el Label i establir la imatge
-    label_image2 = tk.Label(right_frame_image2, image=img2)
-    label_image2.image = img2  # Mantenir una referència!
-    label_image2.pack(expand=False)
+    # # Crear el Label i establir la imatge
+    # label_image2 = tk.Label(right_frame_image2, image=img2)
+    # label_image2.image = img2  # Mantenir una referència!
+    # label_image2.pack(expand=False)
 
     
     return window
