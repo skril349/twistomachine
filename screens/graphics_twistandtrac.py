@@ -1,4 +1,6 @@
 import tkinter as tk
+from tkinter import messagebox
+
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 import numpy as np
@@ -11,13 +13,41 @@ sys.path.append('../')  # Asegúrate de actualizar esta ruta
 from Odrive.odrive_setup import get_motor0_data as get_motor0_data
 from Odrive.odrive_setup import get_motor1_data, trigger_twistandtrac_list
 
+time_initial = None
+
+
+
+def close_window(root, window, positions0, positions1, currents0, currents1, intensities0, intensities1, voltages, torques0, torques1, timestamps):
+    # Limpia todos los arrays
+    positions0.clear()
+    positions1.clear()
+    currents0.clear()
+    currents1.clear()
+    intensities0.clear()
+    intensities1.clear()
+    voltages.clear()
+    torques0.clear()
+    torques1.clear()
+    timestamps.clear()
+    
+    # Restablece time_initial a None
+    global time_initial
+    time_initial = None
+    
+    window.destroy()
+
 def update_twistandtrac_plot(root, position_label, position2_label, intensity_label, 
                voltage_label, torque_label, positions0, positions1, currents0, currents1, intensities0, 
                intensities1, voltages, torques0, torques1, position_ax, current_ax, intensity_ax, 
                voltage_ax, torque_ax, position_canvas, current_canvas, intensity_canvas, voltage_canvas, 
                torque_canvas, timestamps):
-
+    global time_initial
     current_time = time.time()
+
+    if time_initial is None:
+        time_initial = current_time
+    
+    elapsed_time = current_time - time_initial
 
     # Obtenir dades dels dos motors
     position0, current0, voltage, intensity0, torque0 = get_motor0_data()
@@ -40,7 +70,7 @@ def update_twistandtrac_plot(root, position_label, position2_label, intensity_la
     voltages.append(voltage)
     torques0.append(torque0)
     torques1.append(torque1)
-    timestamps.append(current_time)
+    timestamps.append(elapsed_time)
 
     # Netejar eixos i dibuixar noves dades
     position_ax.clear()
@@ -192,5 +222,7 @@ def create_twistandtrac_plot_screen(root, window_geometry):
                intensities1, voltages, torques0, torques1, position_ax, current_ax, intensity_ax, 
                voltage_ax, torque_ax, position_canvas, current_canvas, intensity_canvas, voltage_canvas, 
                torque_canvas, timestamps)
+
+    window.protocol("WM_DELETE_WINDOW", lambda: close_window(root, window, positions0, positions1, currents0, currents1, intensities0, intensities1, voltages, torques0, torques1, timestamps))
 
     return window

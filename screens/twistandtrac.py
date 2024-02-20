@@ -1,6 +1,7 @@
 # twistandtrac.py
 
 import tkinter as tk
+from tkinter import messagebox
 from PIL import Image, ImageTk
 import json
 import threading
@@ -48,15 +49,22 @@ def repeat_motor_movement(fixed_entries, input_fields, root, window_geometry, nu
 
 # Modifica la funció start_motor_and_graphic per llançar el loop de cicles en un nou fil
 def start_motor_and_graphic(fixed_entries, input_fields, root, window_geometry, cycles_entry):
-    num_cycles = int(cycles_entry.get())
+    try:
+        num_cycles = int(cycles_entry.get())
 
-    # Crea i inicia un nou fil per a la repetició del moviment del motor
-    motor_loop_thread = threading.Thread(target=lambda: repeat_motor_movement(fixed_entries, input_fields, root, window_geometry, num_cycles))
-    motor_loop_thread.start()
+        # Crea e inicia un nuevo hilo para la repetición del movimiento del motor
+        motor_loop_thread = threading.Thread(target=lambda: repeat_motor_movement(fixed_entries, input_fields, root, window_geometry, num_cycles))
+        motor_loop_thread.start()
 
-    # Iniciar la visualización de gráficos en el fil principal
-    create_twistandtrac_plot_screen(root, window_geometry)
-
+        # Iniciar la visualización de gráficos en el hilo principal
+        create_twistandtrac_plot_screen(root, window_geometry)
+    except Exception as e:
+        # Aquí puedes decidir cómo manejar la excepción
+        # Por ejemplo, mostrando un mensaje de error en la interfaz de usuario:
+        tk.messagebox.showerror("Error", f"Se produjo un error: {e}")
+        # O registrando el error en un archivo de log:
+        with open("error_log.txt", "a") as log_file:
+            log_file.write(f"Error en start_motor_and_graphic: {e}\n")
 
 def start_button_action(n_input_list, trigger_list, root, window_geometry):
     # Recopilar los valores de los inputs de N
