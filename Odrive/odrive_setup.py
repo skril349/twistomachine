@@ -8,13 +8,20 @@ def setup_odrive():
     print("Finding an ODrive...")
     my_drive = odrive.find_any()
 
-    print("Starting calibration...")
-    my_drive.axis1.requested_state = AXIS_STATE_FULL_CALIBRATION_SEQUENCE
+    # Comprueba si axis1 ya está en modo de control en bucle cerrado
+    if my_drive.axis1.current_state != AXIS_STATE_CLOSED_LOOP_CONTROL:
+        print("Starting calibration for axis1...")
+        my_drive.axis1.requested_state = AXIS_STATE_FULL_CALIBRATION_SEQUENCE
+        print("state =",my_drive.axis1.requested_state)
+        while my_drive.axis1.current_state != AXIS_STATE_IDLE:
+            time.sleep(0.1)
 
-    while my_drive.axis1.current_state != AXIS_STATE_IDLE:
-        time.sleep(0.1)
+        my_drive.axis1.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
+    else:
+        print("state =",my_drive.axis1.requested_state)
+        print("Axis1 already calibrated.")
 
-    my_drive.axis1.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
+    # Aplica la configuración deseada para axis1
     my_drive.axis1.controller.config.input_mode = INPUT_MODE_TRAP_TRAJ
     my_drive.axis1.trap_traj.config.vel_limit = 25
     my_drive.axis1.trap_traj.config.accel_limit = 50
@@ -22,12 +29,19 @@ def setup_odrive():
     my_drive.axis1.motor.config.current_lim = 30
     my_drive.axis1.controller.config.vel_limit = 25
 
-    my_drive.axis0.requested_state = AXIS_STATE_FULL_CALIBRATION_SEQUENCE
+    # Repite la comprobación y calibración para axis0
+    if my_drive.axis0.current_state != AXIS_STATE_CLOSED_LOOP_CONTROL:
+        print("Starting calibration for axis0...")
+        my_drive.axis0.requested_state = AXIS_STATE_FULL_CALIBRATION_SEQUENCE
 
-    while my_drive.axis0.current_state != AXIS_STATE_IDLE:
-        time.sleep(0.1)
+        while my_drive.axis0.current_state != AXIS_STATE_IDLE:
+            time.sleep(0.1)
 
-    my_drive.axis0.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
+        my_drive.axis0.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
+    else:
+        print("Axis0 already calibrated.")
+
+    # Aplica la configuración deseada para axis0
     my_drive.axis0.controller.config.input_mode = INPUT_MODE_TRAP_TRAJ
     my_drive.axis0.trap_traj.config.vel_limit = 25
     my_drive.axis0.trap_traj.config.accel_limit = 50
