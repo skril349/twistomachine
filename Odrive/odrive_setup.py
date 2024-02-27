@@ -2,9 +2,17 @@ import odrive
 from odrive.enums import *
 import time
 import threading
+import serial
 
+ser = None  # Definición global de la variable ser
+port_com = 'COM9'
 
-def setup_odrive():
+def sendData(data):
+    data += "\r\n"
+    ser.write(data.encode())
+
+def setup_odrive(port_com="COM9"):
+    global ser  # Referencia a la variable global
     print("Finding an ODrive...")
     my_drive = odrive.find_any()
 
@@ -28,7 +36,9 @@ def setup_odrive():
     my_drive.axis1.trap_traj.config.decel_limit = 50
     my_drive.axis1.motor.config.current_lim = 30
     my_drive.axis1.controller.config.vel_limit = 25
-
+    print("Inicializando serial")
+    ser = serial.Serial(port_com, 9600)
+    time.sleep(2)
     # Repite la comprobación y calibración para axis0
     if my_drive.axis0.current_state != AXIS_STATE_CLOSED_LOOP_CONTROL:
         print("Starting calibration for axis0...")
@@ -89,6 +99,7 @@ def execute_movement_sequences(Dx, time_delays, N, Trigger = [-1]):
             trigger_time = abs(float(Trigger[i]))  # Usar el valor absolut per a temps de espera
             time.sleep(trigger_time)
             print("Trigger tirat")
+            sendData("1")
             global trigger_twistandtrac_list
             trigger_twistandtrac_list.append(time.time()) 
 
@@ -117,6 +128,7 @@ def execute_rotation_positions(data):
 
             # Executar el trigger aquí si és necessari
             print("Executant el trigger")
+            sendData("1")
             global trigger_twist_list
             trigger_twist_list.append(time.time()) 
             # Suposem que executar el trigger és una funció que pots cridar
@@ -136,6 +148,8 @@ def execute_trigger(trigger_time, trigger_name):
     global trigger_times_list
     trigger_times_list.append(time.time())  # Añade el tiempo actual a la lista
     print(f"Trigger {trigger_name} fired at {trigger_time} seconds")
+    sendData("1")
+
 
 def execute_traction_movement(data):
     my_drive = odrive.find_any()
