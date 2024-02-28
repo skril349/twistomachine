@@ -11,7 +11,8 @@ El script principal `main.py` realitza les següents tasques:
 
 ## Com Utilitzar
 
-Per executar el script `main.py`, podeu utilitzar diferents arguments de línia de comandes per executar tasques específiques:
+Per executar el script `main.py`, es important tenir connectat a l'ordinador tant l'electrònica de Odrive com la de Arduino, i seleccionar a la carpeta >Odrive>odrive_setup.py quin es el port COM del Arduino.
+Podeu utilitzar diferents arguments de línia de comandes per executar tasques específiques:
 
 Es pot crear un entorn virtual si es vol ( no necessari):
 ```
