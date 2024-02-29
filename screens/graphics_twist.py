@@ -10,8 +10,37 @@ import sys
 sys.path.append('../')  # Asegúrate de actualizar esta ruta
 from Odrive.odrive_setup import get_motor0_data,trigger_twist_list
 
+global time_initial
+time_initial = None
+
+def close_window(root, window, positions, currents, intensities, voltages, torques, timestamps):
+    # Limpia todos los arrays
+    positions.clear()
+    currents.clear()
+    intensities.clear()
+    voltages.clear()
+    torques.clear()
+    timestamps.clear()
+    
+    # Restablece time_initial a None
+    global time_initial
+    time_initial = None
+    
+    window.destroy()
+
+
+
 def update_twist_plot(root, position_label, position2_label, intensity_label, voltage_label, torque_label, positions, currents, intensities, voltages, torques, position_ax, current_ax, intensity_ax, voltage_ax, torque_ax, position_canvas, current_canvas, intensity_canvas, voltage_canvas, torque_canvas, timestamps):
+    global time_initial
+
     current_time = time.time()
+
+    if time_initial is None:
+        time_initial = current_time
+    
+    elapsed_time = current_time - time_initial
+
+
     position, position2, intensity, voltage, torque = get_motor0_data()
 
     position_label.config(text=f"Position: {position:.2f} degrees")
@@ -25,7 +54,7 @@ def update_twist_plot(root, position_label, position2_label, intensity_label, vo
     intensities.append(intensity)
     voltages.append(voltage)
     torques.append(torque)
-    timestamps.append(current_time)
+    timestamps.append(elapsed_time)
 
     position_ax.clear()
     current_ax.clear()
@@ -138,5 +167,6 @@ def create_twist_plot_screen(root, window_geometry):
     download_button.pack()
 
     update_twist_plot(window, position_label, position2_label, intensity_label, voltage_label, torque_label,positions, currents, intensities, voltages, torques, position_ax, current_ax, intensity_ax, voltage_ax, torque_ax, position_canvas, current_canvas, intensity_canvas, voltage_canvas, torque_canvas,timestamps)
+    window.protocol("WM_DELETE_WINDOW", lambda: close_window(root, window, positions, currents, intensities, voltages, torques, timestamps))
 
     return window
