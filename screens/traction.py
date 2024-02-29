@@ -32,6 +32,7 @@ def start_motor_and_graphic(fixed_entries, input_fields, root, window_geometry):
     # Iniciar movimiento del motor en un hilo separado
     motor_thread = threading.Thread(target=lambda: print_inputs(fixed_entries, input_fields, root, window_geometry))
     motor_thread.start()
+
     # Iniciar la visualización de gráficos
     create_plot_screen(root, window_geometry)
 
