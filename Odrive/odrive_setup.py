@@ -157,11 +157,11 @@ def execute_traction_movement(data):
     cycles = int(data["Cicles:"])
 
     # Obtenir les pauses i distàncies
-    pauses = [int(data[key]) for key in data if key.startswith("Pause")]
+    pauses = [float(data[key]) for key in data if key.startswith("Pause")]
     distances = [float(data[key]) for key in data if key.startswith("Distance")]
 
     # Obtenir els triggers i ordenar-los pel temps de trigger
-    triggers = {int(data[key]): key for key in data if key.startswith("Trigger")}
+    triggers = {float(data[key]): key for key in data if key.startswith("Trigger")}
     trigger_times = sorted(triggers.keys())
 
     # Iniciar els triggers com a fils d'execució independents
