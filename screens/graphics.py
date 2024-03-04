@@ -72,10 +72,6 @@ def update_plot(root, position_label, position2_label, intensity_label, voltage_
 
     # Dibujar líneas verticales para cada trigger
     for trigger_time in trigger_times_list:
-        print("trigger time = ",trigger_time)
-        print("timestamps = ",timestamps[-1])
-        print("trigger time - elapsed = ",trigger_time-time_initial)
-
         if min(timestamps) <= trigger_time-time_initial <= max(timestamps):
             position_ax.axvline(x=trigger_time-time_initial, color='r', linestyle='--', label='Trigger')
 
