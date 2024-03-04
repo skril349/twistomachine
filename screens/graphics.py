@@ -71,8 +71,12 @@ def update_plot(root, position_label, position2_label, intensity_label, voltage_
 
     # Dibujar líneas verticales para cada trigger
     for trigger_time in trigger_times_list:
-        if min(timestamps) <= trigger_time <= max(timestamps):
-            position_ax.axvline(x=trigger_time, color='r', linestyle='--', label='Trigger')
+        print("trigger time = ",trigger_time)
+        print("timestamps = ",timestamps[-1])
+        print("trigger time - elapsed = ",trigger_time-time_initial)
+
+        if min(timestamps) <= trigger_time-time_initial <= max(timestamps):
+            position_ax.axvline(x=trigger_time-time_initial, color='r', linestyle='--', label='Trigger')
 
     # Añadir leyendas a los gráficos
     position_ax.legend()
@@ -106,7 +110,7 @@ def download_data(timestamps, positions, currents, intensities, voltages, torque
     df['Trigger'] = False
     for trigger_time in trigger_times_list:
         # Encontrar el índice más cercano en el DataFrame para el tiempo del trigger
-        closest_time_index = (df['Timestamp'] - trigger_time).abs().idxmin()
+        closest_time_index = (df['Timestamp'] - trigger_time-time_initial).abs().idxmin()
         df.at[closest_time_index, 'Trigger'] = True
 
     df.to_csv(filename, index=False)

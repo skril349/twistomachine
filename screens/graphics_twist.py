@@ -72,8 +72,8 @@ def update_twist_plot(root, position_label, position2_label, intensity_label, vo
 
     print("twist trigger list =",trigger_twist_list)
     for trigger_time in trigger_twist_list:
-        if min(timestamps) <= trigger_time <= max(timestamps):
-            position_ax.axvline(x=trigger_time, color='r', linestyle='--', label='Trigger' if not trigger_legend_added else "")
+        if min(timestamps) <= trigger_time-time_initial <= max(timestamps):
+            position_ax.axvline(x=trigger_time-time_initial, color='r', linestyle='--', label='Trigger' if not trigger_legend_added else "")
             trigger_legend_added = True  # Marcar que la leyenda del trigger ya se ha añadido
 
 
@@ -106,7 +106,7 @@ def download_data(timestamps, positions, currents, intensities, voltages, torque
     df['Trigger'] = False
     for trigger_time in trigger_twist_list:
         # Encontrar el índice más cercano en el DataFrame para el tiempo del trigger
-        closest_time_index = (df['Timestamp'] - trigger_time).abs().idxmin()
+        closest_time_index = (df['Timestamp'] - trigger_time-time_initial).abs().idxmin()
         df.at[closest_time_index, 'Trigger'] = True
 
     df.to_csv(filename, index=False)
