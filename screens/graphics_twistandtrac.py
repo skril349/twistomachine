@@ -7,14 +7,14 @@ import numpy as np
 import pandas as pd
 import time
 import threading
-
+from datetime import datetime
 import sys
 sys.path.append('../')  # Asegúrate de actualizar esta ruta
 from Odrive.odrive_setup import get_motor0_data as get_motor0_data
 from Odrive.odrive_setup import get_motor1_data, trigger_twistandtrac_list
 
 time_initial = None
-
+now = datetime.now()
 
 
 def close_window(root, window, positions0, positions1, currents0, currents1, intensities0, intensities1, voltages, torques0, torques1, timestamps):
@@ -122,7 +122,7 @@ def update_twistandtrac_plot(root, position_label, position2_label, intensity_la
 
 def download_data(timestamps, positions0, positions1, currents0, currents1, 
                   intensities0, intensities1, voltages, torques0, torques1, 
-                  filename="data/motor_twistandtrac_data.csv"):
+                  filename = f"data/motor_twistandtrac_data_{now.strftime('%Y%m%d_%H%M%S')}.csv"):
     
     data = {
         "Timestamp": timestamps,

@@ -5,13 +5,14 @@ import numpy as np
 import pandas as pd
 import time
 import sys
-
+from datetime import datetime
 sys.path.append('../')  # Asegúrate de actualizar esta ruta
 from Odrive.odrive_setup import get_motor1_data, trigger_times_list
 
 # Restablece time_initial a None
 global time_initial
 time_initial = None
+now = datetime.now()
 
 
 def close_window(root, window, positions, currents, intensities, voltages, torques, timestamps):
@@ -95,7 +96,7 @@ def update_plot(root, position_label, position2_label, intensity_label, voltage_
     # Programar la próxima actualización
     root.after(50, update_plot, root, position_label, position2_label, intensity_label, voltage_label, torque_label, positions, currents, intensities, voltages, torques, position_ax, current_ax, intensity_ax, voltage_ax, torque_ax, position_canvas, current_canvas, intensity_canvas, voltage_canvas, torque_canvas, timestamps)
 
-def download_data(timestamps, positions, currents, intensities, voltages, torques, filename="data/motor_data.csv"):
+def download_data(timestamps, positions, currents, intensities, voltages, torques,filename = f"data/motor_data_{now.strftime('%Y%m%d_%H%M%S')}.csv"):
     data = {
         "Timestamp": timestamps,
         "Position": positions,

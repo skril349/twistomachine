@@ -5,14 +5,14 @@ import numpy as np
 import pandas as pd
 import time
 import threading
-
+from datetime import datetime
 import sys
 sys.path.append('../')  # Asegúrate de actualizar esta ruta
 from Odrive.odrive_setup import get_motor0_data,trigger_twist_list
 
 global time_initial
 time_initial = None
-
+now = datetime.now()
 def close_window(root, window, positions, currents, intensities, voltages, torques, timestamps):
     # Limpia todos los arrays
     positions.clear()
@@ -91,7 +91,7 @@ def update_twist_plot(root, position_label, position2_label, intensity_label, vo
 
     root.after(50, update_twist_plot, root, position_label, position2_label, intensity_label, voltage_label, torque_label, positions, currents, intensities, voltages, torques, position_ax, current_ax, intensity_ax, voltage_ax, torque_ax, position_canvas, current_canvas, intensity_canvas, voltage_canvas, torque_canvas, timestamps)
 
-def download_data(timestamps, positions, currents, intensities, voltages, torques, filename="data/motor_data.csv"):
+def download_data(timestamps, positions, currents, intensities, voltages, torques, filename = f"data/motor_twist_data_{now.strftime('%Y%m%d_%H%M%S')}.csv"):
     data = {
         "Timestamp": timestamps,
         "Position": positions,
