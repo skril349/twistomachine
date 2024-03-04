@@ -70,7 +70,6 @@ def update_twist_plot(root, position_label, position2_label, intensity_label, vo
 
     trigger_legend_added = False
 
-    print("twist trigger list =",trigger_twist_list)
     for trigger_time in trigger_twist_list:
         if min(timestamps) <= trigger_time-time_initial <= max(timestamps):
             position_ax.axvline(x=trigger_time-time_initial, color='r', linestyle='--', label='Trigger' if not trigger_legend_added else "")

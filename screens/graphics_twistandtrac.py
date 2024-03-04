@@ -91,9 +91,8 @@ def update_twistandtrac_plot(root, position_label, position2_label, intensity_la
 
     trigger_legend_added = False
 
-    print("lista trigger = ",trigger_twistandtrac_list)
+
     for trigger_time in trigger_twistandtrac_list:
-        print("min timestamps = {0}, max timestamps = {1} and trigger time = {2}".format(min(timestamps),max(timestamps),trigger_time-time_initial))
         if min(timestamps) <= trigger_time-time_initial <= max(timestamps):
             position_ax.axvline(x=trigger_time-time_initial, color='r', linestyle='--', label='Trigger' if not trigger_legend_added else "")
             trigger_legend_added = True  # Marcar que la leyenda del trigger ya se ha añadido
