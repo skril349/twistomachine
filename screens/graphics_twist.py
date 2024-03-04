@@ -106,7 +106,7 @@ def download_data(timestamps, positions, currents, intensities, voltages, torque
     df['Trigger'] = False
     for trigger_time in trigger_twist_list:
         # Encontrar el índice más cercano en el DataFrame para el tiempo del trigger
-        closest_time_index = (df['Timestamp'] - trigger_time-time_initial).abs().idxmin()
+        closest_time_index = (df['Timestamp'] -( trigger_time-time_initial)).abs().idxmin()
         df.at[closest_time_index, 'Trigger'] = True
 
     df.to_csv(filename, index=False)
