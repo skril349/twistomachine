@@ -89,7 +89,7 @@ def update_twist_plot(root, position_label, position2_label, intensity_label, vo
     voltage_canvas.draw()
     torque_canvas.draw()
 
-    root.after(500, update_twist_plot, root, position_label, position2_label, intensity_label, voltage_label, torque_label, positions, currents, intensities, voltages, torques, position_ax, current_ax, intensity_ax, voltage_ax, torque_ax, position_canvas, current_canvas, intensity_canvas, voltage_canvas, torque_canvas, timestamps)
+    root.after(50, update_twist_plot, root, position_label, position2_label, intensity_label, voltage_label, torque_label, positions, currents, intensities, voltages, torques, position_ax, current_ax, intensity_ax, voltage_ax, torque_ax, position_canvas, current_canvas, intensity_canvas, voltage_canvas, torque_canvas, timestamps)
 
 def download_data(timestamps, positions, currents, intensities, voltages, torques, filename="data/motor_data.csv"):
     data = {

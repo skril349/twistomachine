@@ -113,7 +113,7 @@ def update_twistandtrac_plot(root, position_label, position2_label, intensity_la
     torque_canvas.draw()
 
     # Programar la propera actualització
-    root.after(500, update_twistandtrac_plot, root, position_label, position2_label, intensity_label, 
+    root.after(50, update_twistandtrac_plot, root, position_label, position2_label, intensity_label, 
                voltage_label, torque_label, positions0, positions1, currents0, currents1, intensities0, 
                intensities1, voltages, torques0, torques1, position_ax, current_ax, intensity_ax, 
                voltage_ax, torque_ax, position_canvas, current_canvas, intensity_canvas, voltage_canvas, 
