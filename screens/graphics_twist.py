@@ -25,7 +25,8 @@ def close_window(root, window, positions, currents, intensities, voltages, torqu
     # Restablece time_initial a None
     global time_initial
     time_initial = None
-    
+    plt.close('all')
+
     window.destroy()
 
 
@@ -112,6 +113,11 @@ def download_data(timestamps, positions, currents, intensities, voltages, torque
     print(f"Datos guardados en {filename}")
 
 def create_twist_plot_screen(root, window_geometry):
+    print(f"Número de figuras abiertas: {len(plt.get_fignums())}")
+
+    plt.close('all')
+    print(f"Número de figuras abiertas: {len(plt.get_fignums())}")
+
     window = tk.Toplevel(root)
     window.geometry(window_geometry)
     window.title('Motor twist Data Visualization')
