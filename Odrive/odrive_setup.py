@@ -4,41 +4,32 @@ import time
 import threading
 import serial
 
-ser = None  # Definición global de la variable ser
-port_com = 'COM9'
 
-def sendData(data):
-    data += "\r\n"
-    ser.write(data.encode())
-
-def setup_odrive(port_com="COM9"):
-    global ser  # Referencia a la variable global
+def setup_odrive():
     print("Finding an ODrive...")
     my_drive = odrive.find_any()
 
     # Comprueba si axis1 ya está en modo de control en bucle cerrado
-    if my_drive.axis1.current_state != AXIS_STATE_CLOSED_LOOP_CONTROL:
-        print("Starting calibration for axis1...")
-        my_drive.axis1.requested_state = AXIS_STATE_FULL_CALIBRATION_SEQUENCE
-        print("state =",my_drive.axis1.requested_state)
-        while my_drive.axis1.current_state != AXIS_STATE_IDLE:
-            time.sleep(0.1)
+    # if my_drive.axis1.current_state != AXIS_STATE_CLOSED_LOOP_CONTROL:
+    #     print("Starting calibration for axis1...")
+    #     my_drive.axis1.requested_state = AXIS_STATE_FULL_CALIBRATION_SEQUENCE
+    #     print("state =",my_drive.axis1.requested_state)
+    #     while my_drive.axis1.current_state != AXIS_STATE_IDLE:
+    #         time.sleep(0.1)
 
-        my_drive.axis1.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
-    else:
-        print("state =",my_drive.axis1.requested_state)
-        print("Axis1 already calibrated.")
+    #     my_drive.axis1.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
+    # else:
+    #     print("state =",my_drive.axis1.requested_state)
+    #     print("Axis1 already calibrated.")
 
-    # Aplica la configuración deseada para axis1
-    my_drive.axis1.controller.config.input_mode = INPUT_MODE_TRAP_TRAJ
-    my_drive.axis1.trap_traj.config.vel_limit = 25
-    my_drive.axis1.trap_traj.config.accel_limit = 50
-    my_drive.axis1.trap_traj.config.decel_limit = 50
-    my_drive.axis1.motor.config.current_lim = 30
-    my_drive.axis1.controller.config.vel_limit = 25
-    print("Inicializando serial")
-    ser = serial.Serial(port_com, 9600)
-    time.sleep(2)
+    # # Aplica la configuración deseada para axis1
+    # my_drive.axis1.controller.config.input_mode = INPUT_MODE_TRAP_TRAJ
+    # my_drive.axis1.trap_traj.config.vel_limit = 25
+    # my_drive.axis1.trap_traj.config.accel_limit = 50
+    # my_drive.axis1.trap_traj.config.decel_limit = 50
+    # my_drive.axis1.motor.config.current_lim = 30
+    # my_drive.axis1.controller.config.vel_limit = 25
+    # time.sleep(2)
     # Repite la comprobación y calibración para axis0
     if my_drive.axis0.current_state != AXIS_STATE_CLOSED_LOOP_CONTROL:
         print("Starting calibration for axis0...")
@@ -99,7 +90,7 @@ def execute_movement_sequences(Dx, time_delays, N, Trigger = [-1]):
             trigger_time = abs(float(Trigger[i]))  # Usar el valor absolut per a temps de espera
             time.sleep(trigger_time)
             print("Trigger tirat")
-            sendData("1")
+            
             global trigger_twistandtrac_list
             trigger_twistandtrac_list.append(time.time()) 
 
@@ -118,7 +109,7 @@ def execute_rotation_positions(data):
         print(f"Iniciant el cicle {cycle + 1}/{cycles}")
 
         for key in position_keys:
-            position = float(data[key])
+            position = float(data[key]) * 58/43
             print(f"Enviant l'eix a la posició {position}")
             # Enviar la comanda al dispositiu
             my_drive.axis0.controller.input_pos = position
@@ -128,7 +119,7 @@ def execute_rotation_positions(data):
 
             # Executar el trigger aquí si és necessari
             print("Executant el trigger")
-            sendData("1")
+            
             global trigger_twist_list
             trigger_twist_list.append(time.time()) 
             # Suposem que executar el trigger és una funció que pots cridar
@@ -148,7 +139,7 @@ def execute_trigger(trigger_time, trigger_name):
     global trigger_times_list
     trigger_times_list.append(time.time())  # Añade el tiempo actual a la lista
     print(f"Trigger {trigger_name} fired at {trigger_time} seconds")
-    sendData("1")
+    
 
 
 def execute_traction_movement(data):
