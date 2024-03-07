@@ -35,9 +35,13 @@ def main_window():
             pil_image = Image.open(path)
             img = ImageTk.PhotoImage(pil_image)
             # Utiliza cada función lambda con su propia función de pantalla
+            
+
             btn = tk.Button(root, image=img, command=lambda screen_function=screen_function: screen_function(root, root.geometry()))
             btn.image = img  # Mantiene una referencia!
             btn.pack(side="left", fill="both", expand=True, padx=10, pady=10)
+            if i == 0 or i == 2:
+                btn['state'] = 'disabled'
         except Exception as e:
             print(f"An error occurred: {e}")
 
